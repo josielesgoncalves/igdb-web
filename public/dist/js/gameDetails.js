@@ -1,0 +1,1 @@
+let gameDetailsController = new GameDetailsController("gameDetails");

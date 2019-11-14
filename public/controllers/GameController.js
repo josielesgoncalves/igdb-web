@@ -1,34 +1,22 @@
 class GameController {
 
-    constructor(id){
-        this.id = id;
-        this.getAllGameCatalog();
-        this.games = [];
+    constructor(id) {
+        this.getAllGameCatalog(id);        
     }
 
-    getAllGameCatalog() {
+    getAllGameCatalog(id) {
         Fetch.get('games/catalog').then(data => {
 
-            var gameList  = "";
-                            
+            var gameList  = "";                            
             for(var i = 0; i < data.length; i++) {    
-                var gameTitle = data[i].title;                
                 gameList = '<div class="game-item">'+ 
                 '<h2>'+  data[i].title +'</h2>';
-
-                var games = [];
-                var gameName;
-                var gameImage;
                 for(var j = 0; j < data[i].gameDTOList.length; j++){
-                    gameImage = data[i].gameDTOList[j].mediaDTO.headerImage;
-                    gameName = data[i].gameDTOList[j].name;
-                    
-                    gameList = gameList + '<h5>' + data[i].gameDTOList[j].name + '</h5>'+
-                    '<img src='+ data[i].gameDTOList[j].mediaDTO.headerImage +'alt="#">' + '</div>';
-                    games.push({gameName, gameImage});                    
+                    gameList = gameList + '<div><h5>' + data[i].gameDTOList[j].name + '</h5>'+
+                    '<a href="/game-single"><img src='+ data[i].gameDTOList[j].mediaDTO.headerImage +'alt="#"></a></div>';                
                 }
-                document.getElementById(this.id).innerHTML += gameList;                    
+                document.getElementById(id).innerHTML += gameList + '</div>';                    
             }
         })
-    }
+    };
 }

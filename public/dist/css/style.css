@@ -1148,6 +1148,13 @@ ol {
 	margin-bottom: 80px;
 }
 
+.game-item h2 {
+	font-size: 46px;
+	color: #b01ba59e;
+	padding-top: 30px;
+	margin-bottom: 20px;
+}
+
 .game-item h5 {
 	font-size: 20px;
 	color: #fff;
