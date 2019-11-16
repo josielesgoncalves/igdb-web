@@ -1,1 +1,1 @@
-let gameController = new GameController("gameCatolog");
+let gameController = new GameController("gameCatalog");
