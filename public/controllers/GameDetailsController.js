@@ -2,8 +2,8 @@ class GameDetailsController {
 
     constructor(id) {       
         this.id = id;
-        let gamaValue = decodeURI(window.location.href.split('?name=')[1])
-        let game = JSON.parse(localStorage[gamaValue])
+        let gameValue = decodeURI(window.location.href.split('?name=')[1])
+        let game = JSON.parse(localStorage[gameValue])
         this.gameDetails(game);
     }
 

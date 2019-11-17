@@ -1,0 +1,1 @@
+let searchController = new SearchController("searchGamesPreview");
