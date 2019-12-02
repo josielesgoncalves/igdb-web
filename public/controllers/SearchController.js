@@ -9,7 +9,7 @@ class SearchController {
     }
 
     searchGames(id) {
-         Fetch.get('games/search', {value: 'free to play', size: 1, page: 1}).then(data => {
+         Fetch.get('games/search', {params: {value: 'free to play', size: 1, page: 1}}).then(data => {
             this.searchPreview = data;
 
            // document.getElementById(id).innerHTML += searchPreview;
