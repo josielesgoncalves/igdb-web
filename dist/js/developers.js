@@ -1,0 +1,1 @@
+let developersController = new DevelopersController("developersCatalog");

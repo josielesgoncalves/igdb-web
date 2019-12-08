@@ -1,0 +1,1 @@
+let distributorsController = new DistributorsController("distributorsCatalog");
