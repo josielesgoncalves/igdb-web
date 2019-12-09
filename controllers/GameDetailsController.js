@@ -5,8 +5,9 @@ class GameDetailsController {
         let gameValue = decodeURI(window.location.href.split('?name=')[1])
         let game = JSON.parse(localStorage[gameValue])
         
-        var numero =  this.getReviewsNumber(game.name);
         this.reviews = "";
+        this.reviewsNumber = 0;
+
         this.gameDetails(game);
     }
 
@@ -16,6 +17,9 @@ class GameDetailsController {
         var media = (details.positiveRatings/totalRatings) * 100;
         var rating = media.toFixed(2) + '%';
         var avaliacao = rating + ' das pessoas aprovam este jogo';
+
+        this.getReviewsNumber(details.name);
+        this.getReviews(details.name);
 
         var imagesList =  '<div>';
         for(var i = 0; i < details.mediaDTO.screenshotDTO.length; i++) {
@@ -30,7 +34,7 @@ class GameDetailsController {
             `<img style="margin:10px; width:30%;height:30%;" src="${details.mediaDTO.videoDTO[i].fullImage}" /></a>`;
         }
         videoList+= '</div>';
-
+ 
         var gameItem = 
         '<div class="container">'+			
 			'<div class="row">'+
@@ -59,12 +63,11 @@ class GameDetailsController {
                     '<h4>Vídeos</h4>' + videoList +                                         
 				'</div>'+				
             '</div>'+
-            '<div class="row>' + 
-                '<div class="col-xl-9 col-lg-8 col-md-7 game-single-content">' +                 
-                    '<h2 style="color:white; font-size: 60px; margin-top: 70px;">' + "Review" + '</h2>'+
-
-                '</div>'+
-            '</div>'+
+            `<div>
+                <p>Total de Avaliações: ${this.reviewsNumber}</p>
+                ${this.reviews}
+            </div>`
+            //TODO: COLOCAR REVIEWS AQUI
         '</div>';
         document.getElementById(this.id).innerHTML += gameItem;        
     }
@@ -73,19 +76,54 @@ class GameDetailsController {
         Fetch.get(`games/reviews/${gameName}/number`).then(data => {
             this.reviewsNumber = data
         })
-        return this.reviewsNumber;
     }
 
     getReviews(gameTitle) {
 
-        ;
         var gameReviewSearchDTO = {gameTitle: gameTitle, page: 1, size: 10, sortEnum: "RECENT"};
-        Fetch.post(`games/reviews/${gameReviewSearchDTO}`).then(data => {
-             var reviewsList = data;
-
-
-
+        Fetch.post(`games/reviews/`, gameReviewSearchDTO).then(data => {
+             if(data != null && data.length > 0){    
+                this.createReviewDiv(data);
+             }
+             else{return;}
         })
     }
+
+    createReviewDiv(listDto){
+        this.reviews = `<div class="container">`;
+        listDto.forEach(function (dto, index) {
+            this.reviews+=
+            `<div class="card">
+                <div class="card-body">
+                    <div class="row">
+                        <div class="col-md-2">
+                            <img src="https://image.ibb.co/jw55Ex/def_face.jpg" class="img img-rounded img-fluid"/>
+                            <p class="text-secondary text-center">${dto.datePosted}</p>
+                        </div>
+                        <div class="col-md-10">
+                            <p>
+                                <strong>${dto.userName}</strong>
+                                <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                                <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                                <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+                                <span class="float-right"><i class="text-warning fa fa-star"></i></span>
+
+                            </p>
+                            <div class="clearfix"></div>
+                            <p>${dto.review}</p>
+                            <p>
+                            <a class="float-right btn btn-outline-primary ml-2"> <i class="fa fa-reply"></i> Reply</a>
+                            <a class="float-right btn text-white btn-danger"> <i class="fa fa-heart"></i> Like</a>
+                            </p>
+                        </div>
+                    </div>	        	
+                </div>
+            </div>`            
+        });
+        
+            
+        this.reviews+= `</div>`;
+    }
+
 
 }
