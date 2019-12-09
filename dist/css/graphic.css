@@ -1,0 +1,21 @@
+.outer-circle {
+    background: #003c79;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    /* 
+     Child elements with absolute positioning will be 
+     positioned relative to this div 
+    */
+  } 
+
+  .positive-circle {
+    background: #7b0000;
+    border-radius: 50%;
+    display: inline-block;
+    text-align: center;
+    /* 
+     Child elements with absolute positioning will be 
+     positioned relative to this div 
+    */
+  }

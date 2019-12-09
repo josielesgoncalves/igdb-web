@@ -8,6 +8,11 @@ class GameDetailsController {
         this.reviews = "";
         this.reviewsNumber = 0;
 
+
+        this.getReviewsNumber(game.name);
+        this.getReviews(game.name);
+        this.createAnalisisChart(game.positiveRatings, game.negativeRatings)
+
         this.gameDetails(game);
     }
 
@@ -16,10 +21,7 @@ class GameDetailsController {
         var totalRatings = details.positiveRatings + details.negativeRatings;
         var media = (details.positiveRatings/totalRatings) * 100;
         var rating = media.toFixed(2) + '%';
-        var avaliacao = rating + ' das pessoas aprovam este jogo';
-
-        this.getReviewsNumber(details.name);
-        this.getReviews(details.name);
+        var avaliacao = rating + ' das pessoas aprovam este jogo';        
 
         var imagesList =  '<div>';
         for(var i = 0; i < details.mediaDTO.screenshotDTO.length; i++) {
@@ -50,9 +52,7 @@ class GameDetailsController {
                     '<h4>Publicador</h4>'+
                     '<p>'+ details.publisher +'</p>'+
                     '<h4>Gêneros</h4>'+
-                    '<p>'+ details.genres +'</p>'+                    
-                   	'<h4>Avaliações</h4>' + 
-                    '<p>' + avaliacao + '</p>'+				
+                    '<p>'+ details.genres +'</p>'+                                      
                     '<h4>Data de Lançamento</h4>' + 
                     '<p>' + details.releaseDate + '</p>'+
                     '<h4>Web Site</h4>' + 
@@ -60,21 +60,27 @@ class GameDetailsController {
                     '<h4>Sistema Recomendado</h4>' + 
                     '<p>' + details.minimumRequirement + '</p>'+	
                     '<h4>Imagens</h4>' + imagesList +
-                    '<h4>Vídeos</h4>' + videoList +                                         
+                    '<h4>Vídeos</h4>' + videoList +
+                    '<hr style="background-color:white;">'+                                        
+                    `<div><h2 class="gs-title">Análises</h2>
+                    <h4>Total de Avaliações: <label style="color: white;"> ${totalRatings}</label></h4> 
+                    <h4>${avaliacao}</h4>
+                    <div style="display: flex; align-items: center;">${this.chart}</div>
+                    </div>
+                    <div>                    
+                    </div>
+                    ${this.reviews}` 
 				'</div>'+				
-            '</div>'+
-            `<div>
-                <p>Total de Avaliações: ${this.reviewsNumber}</p>
-                ${this.reviews}
-            </div>`
-            //TODO: COLOCAR REVIEWS AQUI
+            '</div>'+            
+            
+            
         '</div>';
         document.getElementById(this.id).innerHTML += gameItem;        
     }
 
     getReviewsNumber(gameName) {
         Fetch.get(`games/reviews/${gameName}/number`).then(data => {
-            this.reviewsNumber = data
+            this.reviewsNumber = data;
         })
     }
 
@@ -123,6 +129,25 @@ class GameDetailsController {
         
             
         this.reviews+= `</div>`;
+    }
+
+    createAnalisisChart(positiveRatings, negativeRatings){
+        
+        
+        var total = positiveRatings + negativeRatings;
+        var percentValue = parseInt((positiveRatings * 100) / total);
+        var over50 = '';
+        if (percentValue > 50) {
+            over50 = 'over50';
+            percentValue = percentValue > 100 ? 100 : percentValue;
+        }        
+        
+        this.chart =       
+            `<span class="outer-circle" style= " margin-right: 30px;height:${parseInt((positiveRatings/total)*500)}px; width:${parseInt((positiveRatings/total)*500)}px;">
+             <div style="margin-top: 100px; color: white;">Avaliações positivas: <br>${((positiveRatings/total)*100).toFixed(2)}%</div> </span>
+            <span class="positive-circle" style="height:${parseInt((negativeRatings/total)*500)}px; width:${parseInt((negativeRatings/total)*500)}px;">
+            <div style="margin-top: 100px; color: white;">Avaliações negativas:  <br>${((negativeRatings/total)*100).toFixed(2)}%</div></span>` ; 
+
     }
 
 
